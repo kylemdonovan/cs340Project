@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>Foods</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newFood() { showform('insert'); }
+    function updateFood(pid) { showform('update'); }
+    function deleteFood(pid) { showform ('delete'); }
+    function browseFood() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseFood()">
+<h1>Foods</h1>
+<h2>Food can be updated here<h2>
+<table border="1" cellpadding="5">
+	<tr>
+	  <th><a href="/clients">Clients</a></th>
+	  <th><a href="/inventories">Inventories</a></th>
+	  <th><a href="/regions">Regions</a></th>
+	  <th><a href="/sales_history">Sales History</a></th>
+	  <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+	</tr>
+  </table>
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newFood()">New</a></th>
+    <th></th>
+    <th>region id</th>
+    <th>name</th>
+    <th>price</th>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateFood('this.foodID')">Edit</a></td>
+    <td><a href="#" onclick="deleteFood('this.foodID')">Delete</a></td>
+    <td align="right" >2</td>
+    <td >corn</td>
+    <td align="right" >1.29</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateFood('this.foodID')">Edit</a></td>
+    <td><a href="#" onclick="deleteFood('this.foodID')">Delete</a></td>
+    <td align="right" >2</td>
+    <td>Ribeye</td>
+    <td align="right" >19.99</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateFood('this.foodID')">Edit</a></td>
+    <td><a href="#" onclick="deleteFood('this.foodID')">Delete</a></td>
+    <td>1</td>
+    <td align="right" >beans</td>
+    <td>1.09</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+
+
+</body>
+</html>

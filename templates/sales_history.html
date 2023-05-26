@@ -1,0 +1,148 @@
+<html>
+<head>
+<title>Sales History</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newSalesHistory() { showform('insert'); }
+    function updateSalesHistory(pid) { showform('update'); }
+    function deleteSalesHistory(pid) { showform ('delete'); }
+    function browseHistory() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseSalesHistory()">
+<h1>Sales History</h1>
+<h2>This is our sales history page. Please review our prolific sales history at your leisure.</h2>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="/clients">Clients</a></th>
+    <th><a href="/foods">Foods</a></th>
+    <th><a href="/inventories">Inventories</a></th>
+    <th><a href="/regions">Regions</a></th>
+    <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+  </tr>
+</table>
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newSalesHistory()">New</a></th>
+    <th></th>
+    <th>id</th>
+    <th>client id</th>
+    <th>date</th>
+    <th>total cost</th>
+    <th>refund</th>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateSalesHistory('this.saleshistoryID')">Edit</a></td>
+    <td><a href="#" onclick="deleteSalesHistory('this.saleshistoryID')">Delete</a></td>
+    <td align="right" >1</td>
+    <td >1</td>
+    <td align="right" >2022-12-20</td>
+    <td>2044.64</td>
+    <td>null</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateSalesHistory('this.saleshistoryID')">Edit</a></td>
+    <td><a href="#" onclick="deleteSalesHistory('this.saleshistoryID')">Delete</a></td>
+    <td align="right" >2</td>
+    <td>3</td>
+    <td align="right" >2022-12-19</td>
+    <td >266666.66</td>
+    <td>null</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateSalesHistory('this.saleshistoryID')">Edit</a></td>
+    <td><a href="#" onclick="deleteSalesHistory('this.saleshistoryID')">Delete</a></td>
+    <td>3</td>
+    <td>4</td>
+    <td align="right" >2022-12-17</td>
+    <td>23256.56</td>
+    <td>23256.56</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert" style="display: block">
+  <form id="addSalesHistory">
+      <legend><strong>Add Sales Record</strong></legend>
+        <fieldset class="fields">
+          <label> Client ID </label> <input type="int" name="client_id">
+          <label> Date </label> <input type="date" name="date">
+          <label> Total Cost </label> <input type="int" name="total_cost">
+          <label> Refund </label> <input type="int" name="refund">
+        </fieldset>
+        <input class="btn" type="submit" id="addSalesHistory value="Add Sales Record">
+        <input class="btn" type="button" value="cancel">
+</form> <!--add new sales record-->
+</div><!-- insert -->
+
+<p>&nbsp;</p>
+<div id="update" style="display: block">
+<form id="updateSalesHistory">
+    <legend><strong>Update Sales Record</strong></legend>
+        <fieldset class="fields">
+        <label>ID:</label> 1
+          <label> Client ID </label> <input type="int" value="1" name="1">
+          <label> Date </label> <input type="date"  name="date" value="2022-12-20">
+          <label> Total Cost </label> <input type="int" name="Total_cost" value="2044.64">
+          <label> Refund </label> <input type="int" name="refund" value="">
+  </fieldset>
+  <input class="btn" type="submit" id="UpdateSaveHistory" value="Save Update History">
+        <input class="btn" type="button" value="cancel" >
+</form> 
+</div><!-- update -->
+<p>&nbsp;</p>
+<div id="delete" style="display: block">
+<form id="deleteSalesHistory">
+    <legend><strong>Delete Sales Record</strong></legend>
+        <fieldset class="fields">
+        <p>Are you sure you wish to delete the following?</p>
+        <label>ID:</label> 1
+          <label> Client ID </label> 1 
+          
+  </fieldset>
+  <input class="btn" type="submit" id="DeleteClient" value="Delete Client">
+        <input class="btn" type="button" value="cancel" >
+</form> 
+</div><!-- delete -->
+</body>
+</html>

@@ -1,0 +1,92 @@
+/* Styles for the body element */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+}
+
+/* Styles for headings */
+h1 {
+  font-size: 36px;
+  color: #333;
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* Styles for links */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Styles for tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* Styles for forms */
+form {
+  margin: 20px auto;
+  width: 80%;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type=text], input[type=email], select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+input[type=submit] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #0069d9;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+  
+  h1 {
+    font-size: 28px;
+  }
+  
+  table {
+    font-size: 14px;
+  }
+  
+  form {
+    width: 100%;
+  }
+}

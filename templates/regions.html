@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>Regions</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newRegion() { showform('insert'); }
+    function updateRegion(pid) { showform('update'); }
+    function deleteRegion(pid) { showform ('delete'); }
+    function browseRegion() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseRegion()">
+<h1>Regions</h1>
+<h2>Here the regions we serve can be seen. Feel free to update them to include your region</h2>
+
+<table border="1" cellpadding="5">
+	<tr>
+	  <th><a href="/clients">Clients</a></th>
+	  <th><a href="/foods">Foods</a></th>
+	  <th><a href="/inventories">Inventories</a></th>
+	  <th><a href="/sales_history">Sales History</a></th>
+	  <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+	</tr>
+  </table>
+
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newRegion()">New</a></th>
+    <th></th>
+    <th>id</th>
+    <th>region_name</th>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateRegion('this.regionID')">Edit</a></td>
+    <td><a href="#" onclick="deleteRegion('this.regionID')">Delete</a></td>
+    <td align="right" >1</td>
+    <td >Central America</td>
+
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateRegion('this.regionID')">Edit</a></td>
+    <td><a href="#" onclick="deleteRegion('this.regionID')">Delete</a></td>
+    <td align="right" >2</td>
+    <td>United States</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateRegion('this.regionID')">Edit</a></td>
+    <td><a href="#" onclick="deleteRegion('this.regionID')">Delete</a></td>
+    <td>3</td>
+    <td>Western Europe</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+
+
+</body>
+</html>

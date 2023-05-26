@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>Inventories</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newInventory() { showform('insert'); }
+    function updateInventory(pid) { showform('update'); }
+    function deleteInventory(pid) { showform ('delete'); }
+    function browseInventory() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseInventory()">
+<h1>Inventories</h1>
+<h2>You may alter our inventory from this page</h2>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="/clients">Clients</a></th>
+    <th><a href="/foods">Foods</a></th>
+    <th><a href="/regions">Regions</a></th>
+    <th><a href="/sales_history">Sales History</a></th>
+    <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+  </tr>
+</table>
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newInventory()">New</a></th>
+    <th></th>
+    <th>id</th>
+    <th>client id</th>
+    <th>food id</th>
+    <th>item count</th>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateInventory('this.inventoryID')">Edit</a></td>
+    <td><a href="#" onclick="deleteInventory('this.inventoryID')">Delete</a></td>
+    <td align="right" >1</td>
+    <td >1</td>
+    <td align="right" >1</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateInventory('this.inventoryID')">Edit</a></td>
+    <td><a href="#" onclick="deleteInventory('this.inventoryID')">Delete</a></td>
+    <td align="right" >2</td>
+    <td>1</td>
+    <td align="right" >1</td>
+    <td >356</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateInventory('this.inventoryID')">Edit</a></td>
+    <td><a href="#" onclick="deleteInventory('this.inventoryID')">Delete</a></td>
+    <td>3</td>
+    <td>2</td>
+    <td align="right" >3</td>
+    <td>22</td>
+
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>Clients</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newClient() { showform('insert'); }
+    function updateClient(pid) { showform('update'); }
+    function deleteClient(pid) { showform ('delete'); }
+    function browseClient() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseClient()">
+<h1>Clients</h1>
+<table border="1" cellpadding="5">
+    <tr>
+      <th><a href="/foods">Foods</a></th>
+      <th><a href="/inventories">Inventories</a></th>
+      <th><a href="/regions">Regions</a></th>
+      <th><a href="/sales_history">Sales History</a></th>
+      <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+    </tr>
+  </table>
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newClient()">New</a></th>
+    <th></th>
+    <th>id</th>
+    <th>region_id</th>
+    <th>name</th>
+    <th>address</th>
+    <th>phone</th>
+    <th>email</th>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateClient('this.clientID')">Edit</a></td>
+    <td><a href="#" onclick="deleteClient('this.clientID')">Delete</a></td>
+    <td align="right" >1</td>
+    <td >2</td>
+    <td align="right" >Ryu's Kitchen</td>
+    <td>10000 Jollyville Rd Austin, TX 78759</td>
+    <td>804-493-2999</td>
+    <td>ryukitchen@gmail.com</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateClient('this.clientID')">Edit</a></td>
+    <td><a href="#" onclick="deleteClient('this.clientID')">Delete</a></td>
+    <td align="right" >2</td>
+    <td>2</td>
+    <td align="right" >Kyle's Sandwich Shop</td>
+    <td >3939 Parmer Lane Bend, Oregon 19394</td>
+    <td>757-321-4342</td>
+    <td>KyleSandwich@gmail.com</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updateClient('this.clientID')">Edit</a></td>
+    <td><a href="#" onclick="deleteClient('this.clientID')">Delete</a></td>
+    <td>3</td>
+    <td>1</td>
+    <td align="right" >#1 Tacos</td>
+    <td>4939 45th Street, Mexico City, Mexico</td>
+    <td>949-999-3929</td>
+    <td>Num1Tacos@gmail.com</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+
+
+</body>
+</html>
