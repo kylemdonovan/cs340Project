@@ -1,6 +1,5 @@
-from flask import Flask, render_template, json, redirect
+from flask import Flask, render_template, request, json, redirect
 from flask_mysqldb import MySQL
-from flask import request
 import os
 
 app = Flask(__name__)
@@ -11,41 +10,60 @@ app.config['MYSQL_PASSWORD'] = '5175' #last 4 of onid
 app.config['MYSQL_DB'] = 'cs340_donovaky'
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
-
 mysql = MySQL(app)
 
-# Routes
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/clients')
-def clients():
-    return render_template('clients.html')
-
-@app.route('/foods')
+# Read (Retrieve) - Display all foods
+@app.route('/foods', methods=['GET'])
 def foods():
-    return render_template('foods.html')
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM foods")
+    foods = cur.fetchall()
+    cur.close()
+    return render_template('foods.html', foods=foods)
 
-@app.route('/inventories')
-def inventories():
-    return render_template('inventories.html')
+# Create - Add a new food
+@app.route('/foods/add', methods=['POST'])
+def add_food():
+    name = request.form['name']
+    price = request.form['price']
+    
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO foods (name, price) VALUES (%s, %s)", (name, price))
+    mysql.connection.commit()
+    cur.close()
+    
+    return redirect('/foods')
 
-@app.route('/regions')
-def regions():
-    return render_template('regions.html')
+# Update - Edit an existing food
+@app.route('/foods/edit/<int:food_id>', methods=['GET', 'POST'])
+def edit_food(food_id):
+    cur = mysql.connection.cursor()
+    
+    if request.method == 'POST':
+        name = request.form['name']
+        price = request.form['price']
+        
+        cur.execute("UPDATE foods SET name = %s, price = %s WHERE id = %s", (name, price, food_id))
+        mysql.connection.commit()
+        cur.close()
+        
+        return redirect('/foods')
+    
+    cur.execute("SELECT * FROM foods WHERE id = %s", (food_id,))
+    food = cur.fetchone()
+    cur.close()
+    
+    return render_template('edit_food.html', food=food)
 
-@app.route('/sales_history')
-def sales_history():
-    return render_template('sales_history.html')
-
-@app.route('/sales_history_has_food')
-def sales_history_has_food():
-    return render_template('sales_history_has_food.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
+# Delete - Remove an existing food
+@app.route('/foods/delete/<int:food_id>', methods=['POST'])
+def delete_food(food_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM foods WHERE id = %s", (food_id,))
+    mysql.connection.commit()
+    cur.close()
+    
+    return redirect('/foods')
 
 # Listener
 if __name__ == "__main__":
