@@ -3,13 +3,24 @@ from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
-app.config['MYSQL_USER'] = 'cs340_donovaky'
-app.config['MYSQL_PASSWORD'] = '5175'  # last 4 of onid
-app.config['MYSQL_DB'] = 'cs340_donovaky'
-app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+app.config['MYSQL_HOST'] = '34.170.99.60'
+app.config['MYSQL_USER'] = 'test'
+app.config['MYSQL_PASSWORD'] = 'root'  # last 4 of onid
+app.config['MYSQL_DB'] = 'new_schema'
+# app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql = MySQL(app)
+
+def insert(insertCmd):
+  try:
+    cursor = mysql.connection.cursor()
+    cursor.execute(insertCmd)
+    mysql.connection.commit()
+    return True
+  except Exception as e:
+    print("Problem inserting into db: " + str(e))
+    return False
+  return False
 
 
 # Routes
@@ -21,15 +32,31 @@ def index():
 @app.route('/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'POST':
+
         # Add new client record to the database
         name = request.form['name']
+        region_id = request.form['region_id']
+        address = request.form['address']
+        phone = request.form['phone']
+        email = request.form['email']
+        query = '''Insert into Clients (region_id, name, address, phone, email)
+        values 
+        ("{}","{}","{}","{}","{}")'''.format(region_id,name, address, phone, email)
+        print(query)
+
         # Process the data and insert into the database using MySQL queries
-        # ...
+        insert(query)
 
         return redirect(url_for('clients'))
     else:
         # Retrieve client records from the database
         # ...
+
+        cur = mysql.connection.cursor()
+        cur.execute("""SELECT * from Clients""" )
+        rv = cur.fetchall()
+        clients = rv
+        print(clients)
 
         return render_template('clients.html', clients=clients)
 

@@ -8,26 +8,46 @@
 
     <h2>Add New Client</h2>
     <form method="POST" action="{{ url_for('clients') }}">
+
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
+        <br>
+        <label for="region_id">Region id:</label>
+        <input type="text" id="region_id" name="region_id" required>
+        <br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required>
+        <br>
+        <label for="phone">phone:</label>
+        <input type="text" id="phone" name="phone" required>
+        <br>
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required>
+        <br>
         <input type="submit" value="Add Client">
     </form>
 
     <h2>Client List</h2>
-    <table>
+    <table border="1" cellpadding="5">
         <tr>
             <th>ID</th>
+            <th>Region ID</th>
             <th>Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Email</th>
             <th>Action</th>
         </tr>
         {% for client in clients %}
         <tr>
-            <td>{{ client.id }}</td>
-            <td>{{ client.name }}</td>
-            <td>
-                <a href="{{ url_for('edit_client', client_id=client.id) }}">Edit</a> |
-                <a href="{{ url_for('delete_client', client_id=client.id) }}">Delete</a>
-            </td>
+            <td>{{ client[0] }}</td>
+            <td>{{ client[1] }}</td>
+            <td>{{ client[2] }}</td>
+            <td>{{ client[3] }}</td>
+            <td>{{ client[4] }}</td>
+            <td>{{ client[5] }}</td>
+            <td><a href="#" onClick="updateClient('this.clientID')">Edit</a></td>
+            <td><a href="#" onclick="deleteClient('this.clientID')">Delete</a></td>
         </tr>
         {% endfor %}
     </table>
