@@ -3,11 +3,11 @@ from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
-app.config['MYSQL_USER'] = 'cs340_donovaky'
-app.config['MYSQL_PASSWORD'] = '5175'  # last 4 of onid
-app.config['MYSQL_DB'] = 'cs340_donovaky'
-app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+app.config['MYSQL_HOST'] = '34.170.99.60'
+app.config['MYSQL_USER'] = 'test'
+app.config['MYSQL_PASSWORD'] = 'root'  # last 4 of onid
+app.config['MYSQL_DB'] = 'new_schema'
+# app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -30,6 +30,12 @@ def clients():
     else:
         # Retrieve client records from the database
         # ...
+
+        cur = mysql.connection.cursor()
+        cur.execute("""SELECT * from Clients""" )
+        rv = cur.fetchall()
+        clients = rv
+        print(clients)
 
         return render_template('clients.html', clients=clients)
 
