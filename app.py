@@ -11,6 +11,17 @@ app.config['MYSQL_DB'] = 'new_schema'
 
 mysql = MySQL(app)
 
+def insert(insertCmd):
+  try:
+    cursor = mysql.connection.cursor()
+    cursor.execute(insertCmd)
+    mysql.connection.commit()
+    return True
+  except Exception as e:
+    print("Problem inserting into db: " + str(e))
+    return False
+  return False
+
 
 # Routes
 @app.route('/')
@@ -21,10 +32,20 @@ def index():
 @app.route('/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'POST':
+
         # Add new client record to the database
         name = request.form['name']
+        region_id = request.form['region_id']
+        address = request.form['address']
+        phone = request.form['phone']
+        email = request.form['email']
+        query = '''Insert into Clients (region_id, name, address, phone, email)
+        values 
+        ("{}","{}","{}","{}","{}")'''.format(region_id,name, address, phone, email)
+        print(query)
+
         # Process the data and insert into the database using MySQL queries
-        # ...
+        insert(query)
 
         return redirect(url_for('clients'))
     else:
