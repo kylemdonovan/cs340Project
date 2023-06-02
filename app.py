@@ -32,35 +32,21 @@ def index():
 @app.route('/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'POST':
-
-        # Add new client record to the database
-        name = request.form['name']
-        region_id = request.form['region_id']
-        address = request.form['address']
-        phone = request.form['phone']
-        email = request.form['email']
-        query = '''Insert into Clients (region_id, name, address, phone, email)
-        values 
-        ("{}","{}","{}","{}","{}")'''.format(region_id,name, address, phone, email)
-        print(query)
-
-        # Process the data and insert into the database using MySQL queries
-        insert(query)
-
+        if 'name' in request.form:
+            name = request.form['name']
+            # Process the data and insert into the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO Clients (name) VALUES (%s)", (name,))
+            mysql.connection.commit()
+            cur.close()
         return redirect(url_for('clients'))
     else:
-        # Retrieve client records from the database
-        # ...
-
         cur = mysql.connection.cursor()
-        cur.execute("""SELECT * from Clients""" )
-        rv = cur.fetchall()
-        clients = rv
-        print(clients)
-
+        cur.execute("SELECT * FROM Clients")
+        clients = cur.fetchall()
+        cur.close()
         return render_template('clients.html', clients=clients)
-
-
+    
 @app.route('/foods', methods=['GET', 'POST'])
 def foods():
     if request.method == 'POST':
