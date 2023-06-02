@@ -4,7 +4,7 @@ from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'class.mysql.engr.oregonstate.edu'
+app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
 app.config['MYSQL_USER'] = 'cs340_donovaky'
 app.config['MYSQL_PASSWORD'] = '5175'  # last 4 of onid
 app.config['MYSQL_DB'] = 'cs340_donovaky'
@@ -12,25 +12,6 @@ app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql = MySQL(app)
 
-def execute_ddl_file(filename):
-    # Establish a connection to the database
-    conn = mysql.connection
-    cursor = conn.cursor()
-
-    # Read the DDL file
-    with open(filename, 'r') as file:
-        ddl_statements = file.read()
-
-    # Execute the DDL statements
-    cursor.execute(ddl_statements)
-
-    # Commit the changes and close the cursor
-    conn.commit()
-    cursor.close()
-
-
-# Execute the DDL file before running the Flask app
-execute_ddl_file('ddl.sql')
 
 # Routes
 @app.route('/')
@@ -133,4 +114,4 @@ def sales_history():
 
 
 if __name__ == '__main__':
-    app.run(port=58610, debug=True)
+    app.run(port=68410, debug=True)
