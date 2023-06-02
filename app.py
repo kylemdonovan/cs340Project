@@ -1,27 +1,36 @@
+import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = '34.170.99.60'
-app.config['MYSQL_USER'] = 'test'
-app.config['MYSQL_PASSWORD'] = 'root'  # last 4 of onid
-app.config['MYSQL_DB'] = 'new_schema'
-# app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+app.config['MYSQL_HOST'] = 'class.mysql.engr.oregonstate.edu'
+app.config['MYSQL_USER'] = 'cs340_donovaky'
+app.config['MYSQL_PASSWORD'] = '5175'  # last 4 of onid
+app.config['MYSQL_DB'] = 'cs340_donovaky'
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql = MySQL(app)
 
-def insert(insertCmd):
-  try:
-    cursor = mysql.connection.cursor()
-    cursor.execute(insertCmd)
-    mysql.connection.commit()
-    return True
-  except Exception as e:
-    print("Problem inserting into db: " + str(e))
-    return False
-  return False
+def execute_ddl_file(filename):
+    # Establish a connection to the database
+    conn = mysql.connection
+    cursor = conn.cursor()
 
+    # Read the DDL file
+    with open(filename, 'r') as file:
+        ddl_statements = file.read()
+
+    # Execute the DDL statements
+    cursor.execute(ddl_statements)
+
+    # Commit the changes and close the cursor
+    conn.commit()
+    cursor.close()
+
+
+# Execute the DDL file before running the Flask app
+execute_ddl_file('ddl.sql')
 
 # Routes
 @app.route('/')
@@ -32,31 +41,18 @@ def index():
 @app.route('/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'POST':
-
         # Add new client record to the database
         name = request.form['name']
-        region_id = request.form['region_id']
-        address = request.form['address']
-        phone = request.form['phone']
-        email = request.form['email']
-        query = '''Insert into Clients (region_id, name, address, phone, email)
-        values 
-        ("{}","{}","{}","{}","{}")'''.format(region_id,name, address, phone, email)
-        print(query)
-
         # Process the data and insert into the database using MySQL queries
-        insert(query)
+        # ...
 
         return redirect(url_for('clients'))
     else:
         # Retrieve client records from the database
-        # ...
-
         cur = mysql.connection.cursor()
-        cur.execute("""SELECT * from Clients""" )
-        rv = cur.fetchall()
-        clients = rv
-        print(clients)
+        cur.execute("SELECT * FROM Clients")
+        clients = cur.fetchall()
+        cur.close()
 
         return render_template('clients.html', clients=clients)
 
@@ -73,7 +69,10 @@ def foods():
         return redirect(url_for('foods'))
     else:
         # Retrieve food records from the database
-        # ...
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Foods")
+        foods = cur.fetchall()
+        cur.close()
 
         return render_template('foods.html', foods=foods)
 
@@ -90,7 +89,10 @@ def inventories():
         return redirect(url_for('inventories'))
     else:
         # Retrieve inventory records from the database
-        # ...
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Inventories")
+        inventories = cur.fetchall()
+        cur.close()
 
         return render_template('inventories.html', inventories=inventories)
 
@@ -106,7 +108,10 @@ def regions():
         return redirect(url_for('regions'))
     else:
         # Retrieve region records from the database
-        # ...
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Regions")
+        regions = cur.fetchall()
+        cur.close()
 
         return render_template('regions.html', regions=regions)
 
@@ -119,10 +124,13 @@ def sales_history():
         return redirect(url_for('sales_history'))
     else:
         # Retrieve sales history records from the database
-        # ...
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Sales_History")
+        sales_history = cur.fetchall()
+        cur.close()
 
         return render_template('sales_history.html', sales_history=sales_history)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=58610, debug=True)
