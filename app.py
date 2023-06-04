@@ -1,8 +1,12 @@
-import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, redirect, url_for, request, render_template, json
+import os
+import database.db_connector as db
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+mysql = MySQL(app)
+
+
 
 app.config['MYSQL_HOST'] = 'classmysql.engr.oregonstate.edu'
 app.config['MYSQL_USER'] = 'cs340_donovaky'
@@ -10,108 +14,363 @@ app.config['MYSQL_PASSWORD'] = '5175'  # last 4 of onid
 app.config['MYSQL_DB'] = 'cs340_donovaky'
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
-mysql = MySQL(app)
 
+# Configuration
+
+db_connection = db.connect_to_database()
+
+# Routes 
+
+def insert(insertCmd):
+  try:
+    cursor = mysql.connection.cursor()
+    cursor.execute(insertCmd)
+    mysql.connection.commit()
+    return True
+  except Exception as e:
+    print("Problem inserting into db: " + str(e))
+    return False
+  return False
 
 # Routes
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
+# Clients
 @app.route('/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'POST':
-        # Add new client record to the database
-        name = request.form['name']
-        # Process the data and insert into the database using MySQL queries
-        # ...
-
-        return redirect(url_for('clients'))
+        if 'name' in request.form:
+            name = request.form['name']
+            region_id = request.form['region_id']
+            address = request.form['address']
+            phone = request.form['phone']
+            email = request.form['email']
+            # Process the data and insert into the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO Clients (region_id, name, address, phone, email) VALUES (%s, %s, %s, %s, %s)",
+                        (region_id, name, address, phone, email))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('clients'))
     else:
-        # Retrieve client records from the database
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Clients")
         clients = cur.fetchall()
         cur.close()
+        return render_template('clients.j2', clients=clients)
 
-        return render_template('clients.html', clients=clients)
+
+@app.route('/add_client', methods=['POST'])
+def add_client():
+    region_id = request.form['region_id']
+    name = request.form['name']
+    address = request.form['address']
+    phone = request.form['phone']
+    email = request.form['email']
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO Clients (region_id, name, address, phone, email) VALUES (%s, %s, %s, %s, %s)",
+                (region_id, name, address, phone, email))
+    mysql.connection.commit()
+    cur.close()
+
+    return redirect(url_for('clients'))
 
 
+@app.route('/edit_client/<int:client_id>', methods=['GET', 'POST'])
+def edit_client(client_id):
+    if request.method == 'POST':
+        if 'name' in request.form:
+            name = request.form['name']
+            region_id = request.form['region_id']
+            address = request.form['address']
+            phone = request.form['phone']
+            email = request.form['email']
+            # Process the data and update the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE Clients SET region_id = %s, name = %s, address = %s, phone = %s, email = %s WHERE client_id = %s",
+                        (region_id, name, address, phone, email, client_id))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('clients'))
+    else:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Clients WHERE client_id = %s", (client_id,))
+        client = cur.fetchone()
+        cur.close()
+        return render_template('edit_client.html', client=client)
+
+
+@app.route('/clients/delete/<int:client_id>', methods=['GET', 'POST'])
+def delete_client(client_id):
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM Clients WHERE client_id = %s", (client_id,))
+        mysql.connection.commit()
+        cur.close()
+        return redirect("/clients")
+    else:
+        # It's a GET request, render the delete confirmation page
+        return render_template('delete_client.html', client_id=client_id)
+# Foods
 @app.route('/foods', methods=['GET', 'POST'])
 def foods():
     if request.method == 'POST':
-        # Add new food record to the database
-        name = request.form['name']
-        price = request.form['price']
-        # Process the data and insert into the database using MySQL queries
-        # ...
-
+        if 'food_name' in request.form and 'price' in request.form:
+            region_id = request.form['region_id']
+            food_name = request.form['food_name']
+            price = request.form['price']
+            # Process the data and insert into the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO Foods (region_id, food_name, price) VALUES (%s, %s, %s)", (region_id, food_name, price))
+            mysql.connection.commit()
+            cur.close()
         return redirect(url_for('foods'))
     else:
-        # Retrieve food records from the database
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Foods")
         foods = cur.fetchall()
         cur.close()
+        return render_template('foods.j2', foods=foods)
 
-        return render_template('foods.html', foods=foods)
-
-
-@app.route('/inventories', methods=['GET', 'POST'])
-def inventories():
+@app.route('/edit_food/<int:food_id>', methods=['GET', 'POST'])
+def edit_food(food_id):
     if request.method == 'POST':
-        # Add new inventory record to the database
-        name = request.form['name']
-        quantity = request.form['quantity']
-        # Process the data and insert into the database using MySQL queries
-        # ...
+        # Retrieve the form data
+        food_name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        category = request.form['category']
 
-        return redirect(url_for('inventories'))
-    else:
-        # Retrieve inventory records from the database
+        # Update the food item in the database
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Inventories")
-        inventories = cur.fetchall()
+        cur.execute("UPDATE Foods SET name = %s, description = %s, price = %s, category = %s WHERE food_id = %s", (food_name, description, price, category, food_id))
+        mysql.connection.commit()
         cur.close()
 
-        return render_template('inventories.html', inventories=inventories)
+        return redirect(url_for('foods'))
+    else:
+        # Retrieve the food item from the database
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Foods WHERE food_id = %s", (food_id,))
+        food = cur.fetchone()
+        cur.close()
+
+        return render_template('edit_food.html', food=food)
 
 
+@app.route('/foods/delete/<int:food_id>')
+def delete_food(food_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM Foods WHERE food_id = %s", (food_id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('foods'))
+
+
+
+@app.route('/inventories')
+def inventories():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Inventories")
+    inventories = cur.fetchall()
+    cur.close()
+    return render_template('inventories.html', inventories=inventories)
+
+@app.route('/inventories/add', methods=['POST'])
+def add_inventory():
+    food_id = request.form['food_id']
+    quantity = request.form['quantity']
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO Inventories (food_id, quantity) VALUES (%s, %s)",
+                (food_id, quantity))
+    mysql.connection.commit()
+    cur.close()
+
+    return redirect(url_for('inventories'))
+
+
+
+@app.route('/inventories/edit/<int:inventory_id>', methods=['GET', 'POST'])
+def edit_inventory(inventory_id):
+    if request.method == 'POST':
+        if 'food_id' in request.form:
+            food_id = request.form['food_id']
+            quantity = request.form['quantity']
+            # Process the data and update the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE Inventories SET food_id = %s, quantity = %s WHERE inventory_id = %s",
+                        (food_id, quantity, inventory_id))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('inventories'))
+    else:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Inventories WHERE inventory_id = %s", (inventory_id,))
+        inventory = cur.fetchone()
+        cur.close()
+        return render_template('edit_inventory.html', inventory=inventory)
+
+@app.route('/inventories/delete/<int:inventory_id>', methods=['GET', 'POST'])
+def delete_inventory(inventory_id):
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM Inventories WHERE inventory_id = %s", (inventory_id,))
+        mysql.connection.commit()
+        cur.close()
+        return redirect("/inventories")
+    else:
+        # It's a GET request, render the delete confirmation page
+        return render_template('delete_inventory.html', inventory_id=inventory_id)
+
+
+
+# Regions
 @app.route('/regions', methods=['GET', 'POST'])
 def regions():
     if request.method == 'POST':
-        # Add new region record to the database
-        name = request.form['name']
-        # Process the data and insert into the database using MySQL queries
-        # ...
-
+        if 'region_name' in request.form:
+            region_name = request.form['region_name']
+            # Process the data and insert into the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO Regions (region_name) VALUES (%s)", (region_name,))
+            mysql.connection.commit()
+            cur.close()
         return redirect(url_for('regions'))
     else:
-        # Retrieve region records from the database
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Regions")
         regions = cur.fetchall()
         cur.close()
-
         return render_template('regions.html', regions=regions)
 
+@app.route('/add_region', methods=['POST'])
+def add_region():
+    if request.method == 'POST':
+        region_name = request.form['region_name']
+        
+        # Process the data and insert into the database using MySQL queries
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO Regions (region_name) VALUES (%s)", (region_name,))
+        mysql.connection.commit()
+        cur.close()
+        
+        return redirect(url_for('regions'))
 
+@app.route('/regions/edit/<int:region_id>', methods=['GET', 'POST'])
+def edit_region(region_id):
+    if request.method == 'POST':
+        if 'region_name' in request.form:
+            region_name = request.form['region_name']
+            # Process the data and update the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE Regions SET region_name = %s WHERE region_id = %s", (region_name, region_id))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('regions'))
+    else:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Regions WHERE region_id = %s", (region_id,))
+        region = cur.fetchone()
+        cur.close()
+        return render_template('edit_region.html', region=region)
+
+
+@app.route('/regions/delete/<int:region_id>', methods=['GET', 'POST'])
+def delete_region(region_id):
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM Regions WHERE region_id = %s", (region_id,))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for('regions'))
+    else:
+        # It's a GET request, render the delete confirmation page
+        return render_template('delete_region.html', region_id=region_id)
+
+
+# Sales History
 @app.route('/sales_history', methods=['GET', 'POST'])
 def sales_history():
     if request.method == 'POST':
-        # Add new sales history record to the database
-        # ...
+        product_name = request.form['product_name']
+        client_id = request.form['client_id']
+        quantity = request.form['quantity']
+        price = request.form['price']
+        
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO Sales_history (product_name, client_id, quantity, price) VALUES (%s, %s, %s, %s)",
+                    (product_name, client_id, quantity, price))
+        mysql.connection.commit()
+        cur.close()
+        
         return redirect(url_for('sales_history'))
     else:
-        # Retrieve sales history records from the database
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Sales_History")
+        cur.execute("SELECT * FROM Sales_history")
         sales_history = cur.fetchall()
         cur.close()
-
+        
         return render_template('sales_history.html', sales_history=sales_history)
 
 
-if __name__ == '__main__':
-    app.run(port=68410, debug=True)
+
+@app.route('/add_sale', methods=['POST'])
+def add_sale():
+    product_name = request.form['product_name']
+    client_id = request.form['client_id']
+    quantity = request.form['quantity']
+    price = request.form['price']
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO Sales_history (product_name, client_id, quantity, price) VALUES (%s, %s, %s, %s)",
+                (product_name, client_id, quantity, price))
+    mysql.connection.commit()
+    cur.close()
+
+    return redirect(url_for('sales_history'))
+
+@app.route('/edit_sales_history/<int:sales_history_id>', methods=['GET', 'POST'])
+def edit_sales_history(sales_history_id):
+    if request.method == 'POST':
+        if 'product_name' in request.form:
+            product_name = request.form['product_name']
+            client_id = request.form['client_id']
+            quantity = request.form['quantity']
+            price = request.form['price']
+            # Process the data and update the database using MySQL queries
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE Sales_history SET product_name = %s, client_id = %s, quantity = %s, price = %s WHERE sales_history_id = %s",
+                        (product_name, client_id, quantity, price, sales_history_id))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('sales_history'))
+    else:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Sales_history WHERE sales_history_id = %s", (sales_history_id,))
+        sale = cur.fetchone()
+        cur.close()
+        return render_template('edit_sale.html', sale=sale)
+
+
+
+@app.route('/sales_history/delete/<int:sale_id>', methods=['GET', 'POST'])
+def delete_sale(sale_id):
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM Sales_history WHERE sales_history_id = %s", (sale_id,))
+        mysql.connection.commit()
+        cur.close()
+        return redirect("/sales_history")
+    else:
+        # It's a GET request, render the delete confirmation page
+        return render_template('delete_sale.html', sale_id=sale_id)
+
+# Listener
+
+if __name__ == "__main__":
+    port_number = 45680
+    app.run(debug=True, port=port_number)
