@@ -1,0 +1,68 @@
+<html>
+<head>
+    <title>List of Foods</title>
+    <style>
+        .action-button {
+            font-size: 16px;
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<nav border="1" cellpadding="5">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/clients">Clients</a></li>
+            <li><a href="/foods">Foods</a></li>
+        </ul>
+</nav>
+<h1>List of Foods</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Region ID</th>
+            <th>Food Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for food in foods %}
+            <tr>
+                <td>{{ food.region_id }}</td>
+                <td>{{ food.food_name }}</td>
+                <td>{{ food.price }}</td>
+                <td>
+                    <a href="/edit_food/{{ food.food_id }}" class="action-button">Edit</a>
+                     <a href="/foods/delete/{{ food.food_id }}" class="delete-button">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add Food</h2>
+<form method="POST" action="/add_food" style="display: flex; flex-direction: row;">
+    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+        <label for="region_id" style="margin-right: 10px;">Region ID:</label>
+        <input type="text" name="region_id" id="region_id" required>
+    </div>
+    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+        <label for="food_name" style="margin-right: 10px;">Food Name:</label>
+        <input type="text" name="food_name" id="food_name" required>
+
+    </div>
+    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+        <label for="price" style="margin-right: 10px;">Price:</label>
+        <input type="text" name="price" id="price" required>
+    </div>
+    <button type="submit">Add</button>
+</form>
+</body>
+</html>

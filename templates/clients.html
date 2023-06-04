@@ -4,15 +4,26 @@
     <title>Clients</title>
 </head>
 <body>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+        </tr>
+      </table>
     <h1>Clients</h1>
 
     <h2>Add New Client</h2>
     <form method="POST" action="{{ url_for('clients') }}">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
         <label for="region_id">Region id:</label>
         <input type="text" id="region_id" name="region_id" required>
+        <br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
         <br>
         <label for="address">Address:</label>
         <input type="text" id="address" name="address" required>

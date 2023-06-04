@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title>List of Inventories</title>
+    <style>
+        .action-button {
+            font-size: 16px;
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<nav border="1" cellpadding="5">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/clients">Clients</a></li>
+            <li><a href="/foods">Foods</a></li>
+        </ul>
+</nav>
+<h1>List of Inventories</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Food Name</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inventory in inventories %}
+            <tr>
+                <td>{{ inventory.food_name }}</td>
+                <td>{{ inventory.item_count }}</td>
+                <td>
+                    <a href="/edit_inventory/{{ inventory.inventory_id }}" class="action-button">Edit</a>
+                    <a href="/inventories/delete/{{ inventory.inventory_id }}" class="delete-button">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add Inventory</h2>
+<form method="POST" action="{{ url_for('add_inventory') }}">
+    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+        <label for="food_id" style="margin-right: 10px;">Food ID:</label>
+        <input type="text" name="food_id" id="food_id" required>
+    </div>
+    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+        <label for="quantity" style="margin-right: 10px;">Quantity:</label>
+        <input type="text" name="quantity" id="quantity" required>
+    </div>
+    <button type="submit">Add Inventory</button>
+</form>
+
+</body>
+</html>

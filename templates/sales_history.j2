@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>Sales History</title>
+    <style>
+        .action-button {
+            font-size: 16px;
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<nav border="1" cellpadding="5">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/clients">Clients</a></li>
+            <li><a href="/foods">Foods</a></li>
+        </ul>
+</nav>
+<h1>Sales History</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Sales History ID</th>
+            <th>Client ID</th>
+            <th>Date</th>
+            <th>Total Cost</th>
+            <th>Refund</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale in sales_history %}
+            <tr>
+                <td>{{ sale.sales_history_id }}</td>
+                <td>{{ sale.client_id }}</td>
+                <td>{{ sale.date }}</td>
+                <td>{{ sale.total_cost }}</td>
+                <td>{{ sale.refund }}</td>
+                <td>
+                    <a href="{{ url_for('edit_sales_history', sales_history_id=sale.sales_history_id) }}" class="action-button">Edit</a>
+                    <a href="{{ url_for('delete_sale_history', sales_history_id=sale.sales_history_id) }}" class="action-button">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

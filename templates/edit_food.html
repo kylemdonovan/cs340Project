@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title>Edit Food</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        <table border="1" cellpadding="5">
+            <caption> Editing Food: </caption>
+            <!-- Access data passed from server-side code -->
+            {% if data %}
+                <thead>
+                    <tr>
+                        <!-- Create column headers for the new attributes -->
+                        <th scope="col" data-field="foodID" data-filter-control="input">Food ID</th>
+                        <th scope="col" data-field="name" data-filter-control="input">Name</th>
+                        <th scope="col" data-field="description" data-filter-control="input">Description</th>
+                        <th scope="col" data-field="price" data-filter-control="input">Price</th>
+                        <th scope="col" data-field="category" data-filter-control="input">Category</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- Iterate through every food item in data -->
+                    {% for food in data %}
+                        <tr>
+                            <!-- Create table cells for the new attributes -->
+                            <td>{{ food.food_id }}</td>
+                            <td>{{ food.name }}</td>
+                            <td>{{ food.description }}</td>
+                            <td>{{ food.price }}</td>
+                            <td>{{ food.category }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% endif %}
+        </table>
+
+        <div id="edit">
+            <!-- Form to edit data in the food table -->
+            <form id="editFood" action="/edit_food/{{ food.food_id }}" method="post">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ food.name }}">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" value="{{ food.description }}">
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="text" class="form-control" id="price" name="price" value="{{ food.price }}">
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <input type="text" class="form-control" id="category" name="category" value="{{ food.category }}">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+            
+        </div>
+    </div>
+</body>
+</html>
