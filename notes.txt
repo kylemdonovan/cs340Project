@@ -1,0 +1,19 @@
+enter virtual environment since you've set it up 
+source venv/bin/activate
+
+run locally
+python3 app.py
+
+host online on flip server (whichever youre connected to, 
+flipX.engr.oregonstate.edu???)
+gunicorn -b 0.0.0.0:46410 -D app:app 
+
+enter server for maria db for SQL commands
+mysql -u cs340_donovaky -p5175 -h classmysql.engr.oregonstate.edu
+
+
+So right now, it seems problematic to add inventory items.
+I have an error html that take the user to a page to say 
+you must add item to food before adding to client inventory
+However, what are the valid client ids? I searched on mariadb for them,
+valid # are 1,2,3, and 4
