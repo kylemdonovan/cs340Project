@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Food</title>
+</head>
+<body>
+    <h1>Food</h1>
+
+    <h2>Edit Food</h2>
+    <form method="POST" action="{{ url_for('edit_food', food_id = food[0]) }}">
+        <label for="region_id">Region ID:</label>
+        <input type="text" name="region_id" id="region_id" required>
+
+        <label for="name">Name:</label>
+        <input type="text" name="food_name" id="food_name" required>
+
+        <label for="price">Price:</label>
+        <input type="text" name="price" id="price" required>
+
+        <input type="submit" value="Edit Food">
+    </form>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Regions</title>
+</head>
+
+  <h2>Edit Region</h2>
+  <form method="POST" action="{{ url_for('edit_region', region_id = region[0]) }}">
+	  <label for="region_name">Region Name:</label>
+	  <input type="text" id="region_name" name="region_name" required>
+	  <br>
+	 
+	  <input type="submit" value="Edit Region">
+  </form>
+
+</body>
+</html>
