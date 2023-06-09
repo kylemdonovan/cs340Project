@@ -35,7 +35,17 @@
         {% for region in regions %}
             <tr>
                 <td>{{ region.region_id }}</td>
-                <td>{{ region.name }}</td>
+                <td>
+                    {% if region.region_id == 1 %}
+                        Central America
+                    {% elif region.region_id == 2 %}
+                        United States
+                    {% elif region.region_id == 3 %}
+                        Western Europe
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ url_for('edit_region', region_id=region.region_id) }}" class="action-button">Edit</a>
                     <a href="/regions/delete/{{ region.region_id }}" class="delete-button">Delete</a>
