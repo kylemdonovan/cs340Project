@@ -1,3 +1,4 @@
+<!-- inventories.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +22,7 @@
         <tr>
             <th>ID</th>
             <th>Food ID</th>
+            <th>Region ID</th>
             <th>Quantity</th>
             <th>Action</th>
         </tr>
@@ -28,6 +30,7 @@
         <tr>
             <td>{{ inventory.inventory_id }}</td>
             <td>{{ inventory.food_name }}</td>
+            <td>{{ inventory.region_id }}</td>
             <td>{{ inventory.item_count }}</td>
             <td>
                 <a href="{{ url_for('edit_inventory', inventory_id=inventory.inventory_id) }}">Edit</a>
@@ -42,21 +45,36 @@
         <table>
             <tr>
                 <td><label for="food_id">Food ID:</label></td>
-                <td><input type="text" id="food_id" name="food_id" required></td>
+                <td>
+                    <select name="food_id">
+                        {% for food in foods %}
+                            <option value="{{ food.food_id }}">{{ food.food_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td><label for="client_id">Client ID:</label></td>
-                <td><input type="text" id="client_id" name="client_id" required></td>
+                <td>
+                    <select id="client_id" name="client_id" required>
+                        {% for client in clients %}
+                            <option value="{{ client.client_id }}">{{ client.client_id }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </tr>
             <tr>
-                <td><label for="quantity">Quantity:</label></td>
-                <td><input type="text" id="quantity" name="quantity" required></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Add Inventory"></td>
+                <td><label for="region_id">Region ID:</label></td>
+                <td>
+                    <select id="region_id" name="region_id" required>
+                        {% for region in regions %}
+                            <option value="{{ region.region_id }}">{{ region.region_id }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </tr>
         </table>
+        <input type="submit" value="Add Inventory">
     </form>
     
 </body>

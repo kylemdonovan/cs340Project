@@ -11,28 +11,30 @@
             <thead>
                 <tr>
                     <th scope="col" data-field="productID" data-filter-control="input">Product ID</th>
-                    <th scope="col" data-field="name" data-filter-control="input">Name</th>
+                    <th scope="col" data-field="clientName" data-filter-control="input">Client Name</th>
+                    <th scope="col" data-field="foodName" data-filter-control="input">Food Name</th>
                     <th scope="col" data-field="quantity" data-filter-control="input">Quantity</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ inventory.product_id }}</td>
-                    <td>{{ inventory.name }}</td>
-                    <td>{{ inventory.quantity }}</td>
+                    <td>{{ inventory['inventory_id'] }}</td>
+                    <td>{{ inventory['client_id'] }}</td>
+                    <td>{{ inventory['food_id'] }}</td>
+                    <td>{{ inventory['item_count'] }}</td>
                 </tr>
             </tbody>
         </table>
 
         <div id="edit">
-            <form id="editInventory" action="/edit_inventory/{{ inventory.inventory_id }}" method="post">
+            <form id="editInventory" action="/edit_inventory/{{ inventory['inventory_id'] }}" method="post">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ inventory.name }}">
+                    <input type="text" class="form-control" id="name" name="name" value="{{ inventory['name'] }}">
                 </div>
                 <div class="form-group">
                     <label for="quantity">Quantity</label>
-                    <input type="text" class="form-control" id="quantity" name="quantity" value="{{ inventory.quantity }}">
+                    <input type="text" class="form-control" id="quantity" name="quantity" value="{{ inventory['quantity'] }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>
