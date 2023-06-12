@@ -1,18 +1,7 @@
 <html>
 <head>
     <title>List of Foods</title>
-    <style>
-        .action-button {
-            font-size: 16px;
-            padding: 5px 10px;
-            background-color: #f44336;
-            color: #fff;
-            border: none;
-            text-decoration: none;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-    </style>
+
 </head>
 <body>
 <nav border="1" cellpadding="5">
@@ -23,12 +12,12 @@
             <th><a href="/inventories">Inventories</a></th>
             <th><a href="/regions">Regions</a></th>
             <th><a href="/sales_history">Sales History</a></th>
-            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+            <th><a href="/sales_history_has_food">Sales History Details</a></th>
         </tr>
     </table>
 </nav>
 <h1>List of Foods</h1>
-<table>
+  <table border="1" cellpadding="5">
     <thead>
         <tr>
             <th>Region ID</th>
@@ -51,23 +40,26 @@
         {% endfor %}
     </tbody>
 </table>
-
 <h2>Add Food</h2>
-<form method="POST" action="/add_food" style="display: flex; flex-direction: row;">
-    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
-        <label for="region_id" style="margin-right: 10px;">Region ID:</label>
-        <input type="text" name="region_id" id="region_id" required>
-    </div>
-    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
-        <label for="food_name" style="margin-right: 10px;">Food Name:</label>
-        <input type="text" name="food_name" id="food_name" required>
+<form method="POST" action="/add_food" style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+    <label for="region_id" style="margin-right: 10px;">Region ID:</label>
+    <select name="region_id" id="region_id" required>
+        {% for region in regions %}
+            <option value="{{ region.region_id }}">{{ region.region_id }}</option>
+        {% endfor %}
+    </select>
 
-    </div>
-    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
-        <label for="price" style="margin-right: 10px;">Price:</label>
-        <input type="text" name="price" id="price" required>
-    </div>
-    <button type="submit">Add</button>
+    <label for="food_name" style="margin-right: 10px; margin-left: 10px;">Food Name:</label>
+    <input type="text" name="food_name" id="food_name" required>
+
+    <label for="price" style="margin-right: 10px; margin-left: 10px;">Price:</label>
+    <input type="text" name="price" id="price" required>
+
+    <button type="submit" style="margin-left: 10px;">Add</button>
 </form>
+
 </body>
 </html>
+
+
+

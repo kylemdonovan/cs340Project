@@ -11,11 +11,11 @@
             <th><a href="/inventories">Inventories</a></th>
             <th><a href="/regions">Regions</a></th>
             <th><a href="/sales_history">Sales History</a></th>
-            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+            <th><a href="/sales_history_has_food">Sales History Details</a></th>
         </tr>
     </table>
     <h1>Inventory</h1>
-    <table>
+    <table border = "1" cellpadding= "5">
         <thead>
             <tr>
                 <th>Inventory ID</th>
@@ -26,11 +26,11 @@
             </tr>
         </thead>
         <tbody>
-            {% for inventory in inventories %}
+            {% for inventory in inventory_data %}
             <tr>
                 <td>{{ inventory.inventory_id }}</td>
                 <td>{{ inventory.food_id }}</td>
-                <td>{{ inventory.client_name }}</td>
+                <td>{{ inventory.name }}</td>
                 <td>{{ inventory.item_count }}</td>
                 <td>
                     <a href="{{ url_for('edit_inventory', inventory_id=inventory.inventory_id) }}">Edit</a>
@@ -42,28 +42,28 @@
     </table>
 
 <h2>Add Inventory</h2>
-<form action="{{ url_for('add_inventory') }}" method="POST">
+<form class="add-inventory-form" method="POST" action="/add_inventory">
     <label for="food_id">Food:</label>
     <select name="food_id" id="food_id" required>
         {% for food in foods %}
         <option value="{{ food.food_id }}">{{ food.food_name }}</option>
         {% endfor %}
     </select>
-    <br>
+
     <label for="client_id">Client:</label>
     <select name="client_id" id="client_id" required>
         {% for client in clients %}
         <option value="{{ client.client_id }}">{{ client.name }}</option>
         {% endfor %}
     </select>
-    <br>
+
     <label for="item_count">Item Count:</label>
     <input type="text" name="item_count" id="item_count" required>
     <input type="submit" value="Add">
 </form>
 
+</body>
+</html>
 
-
-    <!-- Rest of the code remains unchanged -->
 </body>
 </html>

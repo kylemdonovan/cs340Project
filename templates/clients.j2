@@ -1,21 +1,9 @@
 <html>
 <head>
     <title>List of Clients</title>
-    <style>
-        .action-button {
-            font-size: 16px;
-            padding: 5px 10px;
-            background-color: #f44336;
-            color: #fff;
-            border: none;
-            text-decoration: none;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-    </style>
+
 </head>
 <body>
-<nav border="1" cellpadding="5">
 <table border="1" cellpadding="5">
         <tr>
             <th><a href="/clients">Clients</a></th>
@@ -23,12 +11,13 @@
             <th><a href="/inventories">Inventories</a></th>
             <th><a href="/regions">Regions</a></th>
             <th><a href="/sales_history">Sales History</a></th>
-            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+            <th><a href="/sales_history_has_food">Sales History Details</a></th>
         </tr>
     </table>
-</nav>
+
 <h1>List of Clients</h1>
 <table>
+<table border = "1" cellpadding= "5">
     <thead>
         <tr>
             <th>Region ID</th>
@@ -60,12 +49,15 @@
 <form method="POST" action="/add_client" style="display: flex; flex-direction: row;">
     <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
         <label for="region_id" style="margin-right: 10px;">Region ID:</label>
-        <input type="text" name="region_id" id="region_id" required>
+        <select name="region_id" id="region_id" required>
+            {% for region in regions %}
+                <option value="{{ region.region_id }}">{{ region.region_id }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
         <label for="name" style="margin-right: 10px;">Name:</label>
         <input type="text" name="name" id="name" required>
-
     </div>
     <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
         <label for="address" style="margin-right: 10px;">Address:</label>
@@ -81,8 +73,6 @@
     </div>
     <button type="submit">Add</button>
 </form>
-
-
 
 </body>
 </html>
