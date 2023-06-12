@@ -1,21 +1,8 @@
 <html>
 <head>
-    <title>List of Regions</title>
-    <style>
-        .action-button {
-            font-size: 16px;
-            padding: 5px 10px;
-            background-color: #f44336;
-            color: #fff;
-            border: none;
-            text-decoration: none;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-    </style>
+    <title>List of REGIONS</title>
 </head>
 <body>
-<nav border="1" cellpadding="5">
     <table border="1" cellpadding="5">
         <tr>
             <th><a href="/clients">Clients</a></th>
@@ -23,42 +10,38 @@
             <th><a href="/inventories">Inventories</a></th>
             <th><a href="/regions">Regions</a></th>
             <th><a href="/sales_history">Sales History</a></th>
-            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+            <th><a href="/sales_history_has_food">Sales History Details</a></th>
         </tr>
     </table>
-</nav>
-<h1>List of Regions</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Region ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for region in regions %}
+    <h1>List of Regions</h1>
+    <table border="1" cellpadding="5">
+        <thead>
             <tr>
-                <td>{{ region.region_id }}</td>
-                <td>{{ region.region_name }}</td>
-                <td>
-                    <a href="{{ url_for('edit_region', region_id=region.region_id) }}" class="action-button">Edit</a>
-                    <a href="/regions/delete/{{ region.region_id }}" class="delete-button">Delete</a>
-                </td>
+                <th>Region ID</th>
+                <th>Name</th>
+                <th>Actions</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h2>Add Region</h2>
-<form method="POST" action="/add_region" style="display: flex; flex-direction: row;">
-    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
-        <label for="region_name" style="margin-right: 10px;">Name:</label>
-        <input type="text" name="region_name" id="region_name" required>
-    </div>
-    <button type="submit">Add</button>
-</form>
-
-
+        </thead>
+        <tbody>
+            {% for region in regions %}
+                <tr>
+                    <td>{{ region.region_id }}</td>
+                    <td>{{ region.region_name }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_region', region_id=region.region_id) }}" class="action-button">Edit</a>
+                        <a href="/regions/delete/{{ region.region_id }}" class="delete-button">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Add Region</h2>
+    <form method="POST" action="/add_region" style="display: flex; flex-direction: row;">
+        <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+            <label for="region_name" style="margin-right: 10px;">Name:</label>
+            <input type="text" name="region_name" id="region_name" required>
+        </div>
+        <button type="submit">Add</button>
+    </form>
 </body>
 </html>

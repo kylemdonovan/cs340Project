@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales History Details</title>
+    <style>
+        .add-sale-form {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .add-sale-form label {
+            margin-right: 10px;
+        }
+    </style>
+
+<body>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Details</a></th>
+        </tr>
+    </table>
+    <h1>Sales History Details</h1>
+
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Sales History ID</th>
+                <th>Client</th>
+                <th>Food Name</th>
+                <th>Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales_history_has_food %}
+            <tr>
+                <td>{{ sale.sales_history_id }}</td>
+                <td>{{ sale.name }}</td>
+                <td>{{ sale.food_name }}</td>
+                <td>{{ sale.count }}</td>
+                <td>
+                    <a href="{{ url_for('delete_sales_history_has_food', sales_history_id=sale.sales_history_id, food_id=sale.food_id) }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add New Sale</h2>
+    <form method="POST" action="{{ url_for('sales_history_has_food') }}" class="add-sale-form" id="add-sale-form" onsubmit="return validateForm()">
+        <label for="sales_history_id">Sales History ID:</label>
+        <input type="text" name="sales_history_id" id="sales_history_id" required>
+
+        <label for="food_id">Food:</label>
+        <select name="food_id" id="food_id" required>
+            {% for food in foods %}
+            <option value="{{ food.food_id }}">{{ food.food_name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="count">Count:</label>
+        <input type="text" name="count" id="count" required>
+
+        <input type="submit" value="Add Sale">
+    </form>
+</body>
+</html>
