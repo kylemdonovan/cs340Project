@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>List of REGIONS</title>
+
 </head>
 <body>
     <table border="1" cellpadding="5">
@@ -10,38 +11,41 @@
             <th><a href="/inventories">Inventories</a></th>
             <th><a href="/regions">Regions</a></th>
             <th><a href="/sales_history">Sales History</a></th>
-            <th><a href="/sales_history_has_food">Sales History Details</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
         </tr>
     </table>
-    <h1>List of Regions</h1>
-    <table border="1" cellpadding="5">
-        <thead>
+<h1>List of Regions</h1>
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Region ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for region in regions %}
             <tr>
-                <th>Region ID</th>
-                <th>Name</th>
-                <th>Actions</th>
+                <td>{{ region.region_id }}</td>
+                <td>{{ region.region_name }}</td>
+                <td>
+                    <a href="{{ url_for('edit_region', region_id=region.region_id) }}" class="action-button">Edit</a>
+                    <a href="/regions/delete/{{ region.region_id }}" class="delete-button">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for region in regions %}
-                <tr>
-                    <td>{{ region.region_id }}</td>
-                    <td>{{ region.region_name }}</td>
-                    <td>
-                        <a href="{{ url_for('edit_region', region_id=region.region_id) }}" class="action-button">Edit</a>
-                        <a href="/regions/delete/{{ region.region_id }}" class="delete-button">Delete</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h2>Add Region</h2>
-    <form method="POST" action="/add_region" style="display: flex; flex-direction: row;">
-        <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
-            <label for="region_name" style="margin-right: 10px;">Name:</label>
-            <input type="text" name="region_name" id="region_name" required>
-        </div>
-        <button type="submit">Add</button>
-    </form>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add Region</h2>
+<form method="POST" action="/add_region" style="display: flex; flex-direction: row;">
+    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+        <label for="region_name" style="margin-right: 10px;">Name:</label>
+        <input type="text" name="region_name" id="region_name" required>
+    </div>
+    <button type="submit">Add</button>
+</form>
+
+
 </body>
 </html>

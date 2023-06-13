@@ -1,21 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sales History Details</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
-    <style>
-        .add-sale-form {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .add-sale-form label {
-            margin-right: 10px;
-        }
-    </style>
-
+    <title>Sales History Has Food</title>
+</head>
 <body>
     <table border="1" cellpadding="5">
         <tr>
@@ -24,7 +11,7 @@
             <th><a href="/inventories">Inventories</a></th>
             <th><a href="/regions">Regions</a></th>
             <th><a href="/sales_history">Sales History</a></th>
-            <th><a href="/sales_history_has_food">Sales History Details</a></th>
+            <th><a href="/sales_history_has_food">Sales History Detail</a></th>
         </tr>
     </table>
     <h1>Sales History Details</h1>
@@ -55,17 +42,18 @@
     </table>
 
     <h2>Add New Sale</h2>
-    <form method="POST" action="{{ url_for('sales_history_has_food') }}" class="add-sale-form" id="add-sale-form" onsubmit="return validateForm()">
-        <label for="sales_history_id">Sales History ID:</label>
+    <form method="POST" action="{{ url_for('sales_history_has_food') }}">
+        <label for="sales_history_id">Sales History ID</label>
         <input type="text" name="sales_history_id" id="sales_history_id" required>
-
+        <br>
         <label for="food_id">Food:</label>
         <select name="food_id" id="food_id" required>
-            {% for food in foods %}
-            <option value="{{ food.food_id }}">{{ food.food_name }}</option>
-            {% endfor %}
+        {% for food in foods %}
+        <option value="{{ food.food_id }}">{{ food.food_name }}</option>
+        {% endfor %}
         </select>
-
+        <br>
+       
         <label for="count">Count:</label>
         <input type="text" name="count" id="count" required>
 
