@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>YanoDanoCo</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+	<h1>Welcome to YanoDanoCo</h1>
+    <h2>Here you can see our clients, food, inventory, regions we serve, and our previous sales history</h2>
+	<table border="1" cellpadding="5">
+	  <tr>
+	    <th><a href="clients">Go to Clients</a></th>
+	    <th><a href="{{ url_for('foods') }}">Go to foods</a></th>
+	    <th><a href="/inventories">Inventories</a></th>
+	    <th><a href="regions">Regions</a></th>
+	    <th><a href="/sales_history">Sales History</a></th>
+	    <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+	  </tr>
+	</table>
+</body>
+</html>

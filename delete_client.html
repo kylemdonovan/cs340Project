@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Client Confirmation</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Delete Client</h1>
+    <p>Are you sure you want to delete client {{ client_id }}?</p>
+    <form method="POST" action="/clients/delete/{{ client_id }}">
+        <button type="submit">Confirm Delete</button>
+    </form>
+</body>
+</html>

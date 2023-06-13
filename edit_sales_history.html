@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Sales History</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Edit Sales History</h1>
+
+    <form method="POST" action="{{ url_for('edit_sales_history_has_food', sales_history_id = sale.sales_history_id, food_id = sale.food_id )}}">
+        <label for="count">Count:</label>
+        <input type="text" name="count" id="count" required>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</body>
+</html>

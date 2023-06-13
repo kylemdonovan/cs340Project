@@ -1,0 +1,81 @@
+<!-- inventories.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventories</title>
+</head>
+<body>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+        </tr>
+    </table>
+
+    <h1>Inventories</h1>
+    
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Food ID</th>
+            <th>Region ID</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
+        {% for inventory in inventories %}
+        <tr>
+            <td>{{ inventory.inventory_id }}</td>
+            <td>{{ inventory.food_name }}</td>
+            <td>{{ inventory.region_id }}</td>
+            <td>{{ inventory.item_count }}</td>
+            <td>
+                <a href="{{ url_for('edit_inventory', inventory_id=inventory.inventory_id) }}">Edit</a>
+                <a href="{{ url_for('delete_inventory', inventory_id=inventory.inventory_id) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add New Inventory</h2>
+    <form method="POST" action="{{ url_for('add_inventory') }}">
+        <table>
+            <tr>
+                <td><label for="food_id">Food ID:</label></td>
+                <td>
+                    <select name="food_id">
+                        {% for food in foods %}
+                            <option value="{{ food.food_id }}">{{ food.food_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="client_id">Client ID:</label></td>
+                <td>
+                    <select id="client_id" name="client_id" required>
+                        {% for client in clients %}
+                            <option value="{{ client.client_id }}">{{ client.client_id }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="region_id">Region ID:</label></td>
+                <td>
+                    <select id="region_id" name="region_id" required>
+                        {% for region in regions %}
+                            <option value="{{ region.region_id }}">{{ region.region_id }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Add Inventory">
+    </form>
+    
+</body>
+</html>

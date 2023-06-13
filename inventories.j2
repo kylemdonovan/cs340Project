@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+<table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+        </tr>
+    </table>
+    <h1>Inventory</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Inventory ID</th>
+                <th>Food ID</th>
+                <th>Client Name</th>
+                <th>Item Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventory in inventory_data %}
+            <tr>
+                <td>{{ inventory.inventory_id }}</td>
+                <td>{{ inventory.food_id }}</td>
+                <td>{{ inventory.name }}</td>
+                <td>{{ inventory.item_count }}</td>
+                <td>
+                    <a href="{{ url_for('edit_inventory', inventory_id=inventory.inventory_id) }}">Edit</a>
+                    <a href="{{ url_for('delete_inventory', inventory_id=inventory.inventory_id) }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<h2>Add Inventory</h2>
+<form action="{{ url_for('add_inventory') }}" method="POST">
+    <label for="food_id">Food:</label>
+    <select name="food_id" id="food_id" required>
+        {% for food in foods %}
+        <option value="{{ food.food_id }}">{{ food.food_name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="client_id">Client:</label>
+    <select name="client_id" id="client_id" required>
+        {% for client in clients %}
+        <option value="{{ client.client_id }}">{{ client.name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="item_count">Item Count:</label>
+    <input type="text" name="item_count" id="item_count" required>
+    <input type="submit" value="Add">
+</form>
+
+
+
+    <!-- Rest of the code remains unchanged -->
+</body>
+</html>

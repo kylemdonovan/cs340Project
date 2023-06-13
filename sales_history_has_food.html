@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales History Has Food</title>
+</head>
+<body>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+        </tr>
+    </table>
+    <h1>Sales History with Food</h1>
+
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Sales History ID</th>
+                <th>Food ID</th>
+                <th>Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales_history %}
+            <tr>
+                <td>{{ sale.sales_history_id }}</td>
+                <td>{{ sale.food_id }}</td>
+                <td>{{ sale.count }}</td>
+                <td>
+                    <a href="{{ url_for('edit_sale', sales_history_id=sale.sales_history_id, food_id=sale.food_id) }}">Edit</a>
+                    <a href="{{ url_for('delete_sale', sales_history_id=sale.sales_history_id, food_id=sale.food_id) }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add New Sale</h2>
+    <form method="POST" action="{{ url_for('sales_history_has_food') }}">
+        <label for="sales_history_id">Sales History ID:</label>
+        <input type="text" name="sales_history_id" id="sales_history_id" required>
+
+        <label for="food_id">Food ID:</label>
+        <input type="text" name="food_id" id="food_id" required>
+
+        <label for="count">Count:</label>
+        <input type="text" name="count" id="count" required>
+
+        <input type="submit" value="Add Sale">
+    </form>
+</body>
+</html>
