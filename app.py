@@ -34,7 +34,7 @@ def insert(insertCmd):
 # Routes
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.j2')
 
 # Clients
 @app.route('/clients', methods=['GET', 'POST'])
@@ -55,10 +55,13 @@ def clients():
             return redirect(url_for('clients'))
     else:
         cur = mysql.connection.cursor()
+        cur.execute("SELECT region_id, region_name FROM Regions")
+        regions = cur.fetchall()
         cur.execute("SELECT * FROM Clients")
         clients = cur.fetchall()
         cur.close()
-        return render_template('clients.j2', clients=clients)
+        return render_template('clients.j2', clients=clients, regions=regions)
+
 
 # Add clients
 @app.route('/add_client', methods=['POST'])
@@ -77,16 +80,17 @@ def add_client():
 
     return redirect(url_for('clients'))
 
+
 @app.route('/edit_client/<int:client_id>', methods=['GET', 'POST'])
 def edit_client(client_id):
     if request.method == 'POST':
-        # Handle form submission and update the client in the database
         if 'name' in request.form:
             name = request.form['name']
             region_id = request.form['region_id']
             address = request.form['address']
             phone = request.form['phone']
             email = request.form['email']
+            # Process the data and update the database using MySQL queries
             cur = mysql.connection.cursor()
             cur.execute("UPDATE Clients SET region_id = %s, name = %s, address = %s, phone = %s, email = %s WHERE client_id = %s",
                         (region_id, name, address, phone, email, client_id))
@@ -94,12 +98,11 @@ def edit_client(client_id):
             cur.close()
             return redirect(url_for('clients'))
     else:
-        # Retrieve the client from the database and render the edit template
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Clients WHERE client_id = %s", (client_id,))
         client = cur.fetchone()
         cur.close()
-        return render_template('edit_client.html', client=client, client_id=client_id)
+        return render_template('edit_client.j2', client=client)
 
 
 @app.route('/clients/delete/<int:client_id>', methods=['GET', 'POST'])
@@ -112,8 +115,8 @@ def delete_client(client_id):
         return redirect("/clients")
     else:
         # It's a GET request, render the delete confirmation page
-        return render_template('delete_client.html', client_id=client_id)
-# Foods
+        return render_template('delete_client.j2', client_id=client_id)
+ # Foods
 @app.route('/foods', methods=['GET', 'POST'])
 def foods():
     if request.method == 'POST':
@@ -131,8 +134,12 @@ def foods():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Foods")
         foods = cur.fetchall()
+
+        cur.execute("SELECT region_id FROM Regions")
+        regions = cur.fetchall()
+
         cur.close()
-        return render_template('foods.j2', foods=foods)
+        return render_template('foods.j2', foods=foods, regions=regions)
 
 @app.route('/add_food', methods=['POST'])
 def add_food():
@@ -148,19 +155,17 @@ def add_food():
 
     return redirect(url_for('foods'))
 
-
 @app.route('/edit_food/<int:food_id>', methods=['GET', 'POST'])
 def edit_food(food_id):
     if request.method == 'POST':
         # Retrieve the form data
+        region_id = request.form['region_id']
         food_name = request.form['name']
-        description = request.form['description']
         price = request.form['price']
-        category = request.form['category']
 
         # Update the food item in the database
         cur = mysql.connection.cursor()
-        cur.execute("UPDATE Foods SET name = %s, description = %s, price = %s, category = %s WHERE food_id = %s", (food_name, description, price, category, food_id))
+        cur.execute("UPDATE Foods SET region_id = %s, food_name = %s, price = %s WHERE food_id = %s", (region_id, food_name, price, food_id))
         mysql.connection.commit()
         cur.close()
 
@@ -172,7 +177,10 @@ def edit_food(food_id):
         food = cur.fetchone()
         cur.close()
 
-        return render_template('edit_food.html', food=food)
+        return render_template('edit_food.j2', food=food)
+
+
+
 
 
 @app.route('/foods/delete/<int:food_id>')
@@ -198,17 +206,17 @@ def inventories():
             return redirect(url_for('inventories'))
     else:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Inventories")
-        inventories = cur.fetchall()
+        cur.execute("SELECT Clients.name, Foods.food_name, Foods.food_id, Inventories.inventory_id, Inventories.item_count FROM Inventories JOIN Foods ON Inventories.food_id = Foods.food_id JOIN Clients ON Inventories.client_id = Clients.client_id")
+        inventory_data = cur.fetchall()
 
         cur.execute("SELECT * FROM Foods")
         foods = cur.fetchall()
 
         cur.execute("SELECT * FROM Clients")
         clients = cur.fetchall()
-
+        #print(inventory_data)
         cur.close()
-        return render_template('inventories.j2', inventories=inventories, foods=foods, clients=clients)
+        return render_template('inventories.j2', inventory_data=inventory_data, foods=foods, clients=clients)
 
 
 @app.route('/add_inventory', methods=['POST'])
@@ -223,26 +231,25 @@ def add_inventory():
     cur.close()
 
     return redirect(url_for('inventories'))
-
 @app.route('/inventories/edit/<int:inventory_id>', methods=['GET', 'POST'])
 def edit_inventory(inventory_id):
     if request.method == 'POST':
         if 'food_id' in request.form:
             food_id = request.form['food_id']
-            quantity = request.form['quantity']
+            item_count = request.form['item_count']
             # Process the data and update the database using MySQL queries
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE Inventories SET food_id = %s, quantity = %s WHERE inventory_id = %s",
-                        (food_id, quantity, inventory_id))
+            cur.execute("UPDATE Inventories SET food_id = %s, item_count = %s WHERE inventory_id = %s",
+                        (food_id, item_count, inventory_id))
             mysql.connection.commit()
             cur.close()
             return redirect(url_for('inventories'))
     else:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Inventories WHERE inventory_id = %s", (inventory_id))
+        cur.execute("SELECT * FROM Inventories WHERE inventory_id = %s", (inventory_id,))
         inventory = cur.fetchone()
         cur.close()
-        return render_template('edit_inventory.html', inventory=inventory)
+        return render_template('edit_inventory.j2', inventory=inventory)
 
 @app.route('/delete_inventory/<int:inventory_id>')
 def delete_inventory(inventory_id):
@@ -251,8 +258,6 @@ def delete_inventory(inventory_id):
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('inventories'))
-
-
 
 # Regions
 @app.route('/regions', methods=['GET', 'POST'])
@@ -271,7 +276,8 @@ def regions():
         cur.execute("SELECT * FROM Regions")
         regions = cur.fetchall()
         cur.close()
-        return render_template('regions.html', regions=regions)
+        return render_template('regions.j2', regions=regions)
+
 
 
 @app.route('/add_region', methods=['GET', 'POST'])
@@ -286,7 +292,7 @@ def add_region():
             cur.close()
             return redirect(url_for('regions'))
     else:
-        return render_template('add_region.html')
+        return render_template('add_region.j2')
 
 
 @app.route('/edit_region/<int:region_id>', methods=['GET', 'POST'])
@@ -305,7 +311,7 @@ def edit_region(region_id):
         cur.execute("SELECT * FROM Regions WHERE region_id = %s", (region_id,))
         region = cur.fetchone()
         cur.close()
-        return render_template('edit_region.html', region=region)
+        return render_template('edit_region.j2', region=region)
 
 
 @app.route('/regions/delete/<int:region_id>', methods=['GET', 'POST'])
@@ -318,7 +324,7 @@ def delete_region(region_id):
         return redirect(url_for('regions'))
     else:
         # It's a GET request, render the delete confirmation page
-        return render_template('delete_region.html', region_id=region_id)
+        return render_template('delete_region.j2', region_id=region_id)
 
 
 # SALES HISTORY
@@ -341,10 +347,16 @@ def sales_history():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Sales_history")
         sales_history = cur.fetchall()
-        print(sales_history)
+        
+        cur.execute("SELECT * FROM Foods")
+        foods = cur.fetchall()
+
+        cur.execute("SELECT * FROM Clients")
+        clients = cur.fetchall()
+        #print(sales_history)
         cur.close()
 
-        return render_template('sales_history.html', sales_history=sales_history)
+        return render_template('sales_history.j2', sales_history=sales_history, foods = foods, clients = clients)
 
 
 
@@ -382,7 +394,7 @@ def edit_sale(sales_history_id):
         cur.execute("SELECT * FROM Sales_history WHERE sales_history_id = %s", (sales_history_id,))
         sale = cur.fetchone()
         cur.close()
-        return render_template('edit_sale.html', sale=sale)
+        return render_template('edit_sale.j2', sale=sale)
 
 
 @app.route('/sales_history/delete/<int:sales_history_id>', methods=['GET', 'POST'])
@@ -395,7 +407,7 @@ def delete_sale(sales_history_id):
         return redirect("/sales_history")
     else:
         # It's a GET request, render the delete confirmation page
-        return render_template('delete_sale.html', sales_history_id=sales_history_id)
+        return render_template('delete_sale.j2', sales_history_id=sales_history_id)
 
 @app.route('/sales_history_has_food', methods=['GET', 'POST'])
 def sales_history_has_food():
@@ -403,22 +415,28 @@ def sales_history_has_food():
         # Handle the form submission for adding a sale history with food
         food_id = request.form['food_id']
         sales_history_id = request.form['sales_history_id']
+        count = request.form['count']
         # Process the data and insert into the Sales_history_has_food table using MySQL queries
         
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO Sales_history_has_food (food_id, sales_history_id) VALUES (%s, %s)",
-                    (food_id, sales_history_id))
+        cur.execute("INSERT INTO Sales_history_has_food (food_id, sales_history_id, count) VALUES (%s, %s, %s)",
+                    (food_id, sales_history_id, count))
         mysql.connection.commit()
         cur.close()
         
         return redirect(url_for('sales_history_has_food'))
     else:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Sales_history_has_food")
+        cur.execute("SELECT Clients.name, Foods.food_name, Sales_history_has_food.count, Sales_history_has_food.sales_history_id, Sales_history_has_food.food_id From Sales_history_has_food Inner Join Sales_history on Sales_history.sales_history_id = Sales_history_has_food.sales_history_id Inner Join Clients on Sales_history.client_id = Clients.client_id inner JOIN Foods on Foods.food_id = Sales_history_has_food.food_id;")
         sales_history_has_food = cur.fetchall()
+        cur.execute("SELECT * FROM Foods")
+        foods = cur.fetchall()
+        cur.execute("SELECT * FROM Clients")
+        clients = cur.fetchall()
+        #print(sales_history_has_food)
         cur.close()
         
-        return render_template('sales_history_has_food.html', sales_history_has_food=sales_history_has_food)
+        return render_template('sales_history_has_food.j2', sales_history_has_food=sales_history_has_food, clients = clients, foods = foods)
 
 @app.route('/edit_sales_history_has_food/<int:sales_history_id>/<int:food_id>', methods=['GET', 'POST'])
 def edit_sales_history_has_food(sales_history_id, food_id):
@@ -438,7 +456,7 @@ def edit_sales_history_has_food(sales_history_id, food_id):
         cur.execute("SELECT * FROM Sales_history_has_food WHERE sales_history_id = %s and food_id = %s", (sales_history_id, food_id))
         sale = cur.fetchone()
         cur.close()
-        return render_template('edit_sales_history_has_food.html', sale=sale)
+        return render_template('edit_sales_history.j2', sale=sale)
 
 
 
@@ -452,11 +470,11 @@ def delete_sales_history_has_food(sales_history_id, food_id):
         return redirect("/sales_history_has_food")
     else:
         # It's a GET request, render the delete confirmation page
-        return render_template('delete_sales_history_has_food.html', sales_history_id=sales_history_id, food_id = food_id)
+        return render_template('delete_sales_history_has_food.j2', sales_history_id=sales_history_id, food_id = food_id)
 
 # Listener
 
 if __name__ == "__main__":
-    port_number = 45654
+    port_number = 45656
     app.run(debug=True, port=port_number)
     
