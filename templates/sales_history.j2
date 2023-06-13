@@ -1,36 +1,37 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>Sales History</title>
+    <style>
+
+    </style>
 </head>
 <body>
 
-  <table border="1" cellpadding="5">
-    <tr>
-        <th><a href="/clients">Clients</a></th>
-        <th><a href="/foods">Foods</a></th>
-        <th><a href="/inventories">Inventories</a></th>
-        <th><a href="/regions">Regions</a></th>
-        <th><a href="/sales_history">Sales History</a></th>
-        <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
-    </tr>
+<table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+        </tr>
     </table>
 
-    <h1>Sales History</h1>
-
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Sales History ID</th>
-                <th>Client ID</th>
-                <th>Date</th>
-                <th>Total Cost</th>
-                <th>Refund</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sale in sales_history %}
+<h1>Sales History</h1>
+<table border="1" cellpadding = "5">
+    <thead>
+        <tr>
+            <th>Sales History ID</th>
+            <th>Client ID</th>
+            <th>Date</th>
+            <th>Total Cost</th>
+            <th>Refund</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale in sales_history %}
             <tr>
                 <td>{{ sale.sales_history_id }}</td>
                 <td>{{ sale.client_id }}</td>
@@ -42,11 +43,12 @@
                     <a href="{{ url_for('delete_sale', sales_history_id=sale.sales_history_id) }}" class="action-button">Delete</a>
                 </td>
             </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% endfor %}
+    </tbody>
+</table>
 
-    <h2>Add New Sale</h2>
+
+<h2>Add New Sale</h2>
     <form method="POST" action="{{ url_for('sales_history') }}">
         <label for="client_id">Client ID:</label>
         <input type="text" name="client_id" id="client_id" required>
@@ -59,8 +61,10 @@
 
         <label for="refund">Refund:</label>
         <input type="text" name="refund" id="refund">
+        
 
         <input type="submit" value="Add Sale">
     </form>
+
 </body>
 </html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Sale</title>
+</head>
+<body>
+    <h1>Edit Sale</h1>
+    <form method="POST" action="{{ url_for('edit_sale', sales_history_id=sale.sales_history_id) }}">
+        <label for="client_id">Client ID:</label>
+        <input type="text" name="client_id" id="client_id" value="{{ sale['client_id'] }}" required>
+
+        <label for="date">Date:</label>
+        <input type="text" name="date" id="date" value="{{ sale['date'] }}" required>
+
+        <label for="total_cost">Total Cost:</label>
+        <input type="text" name="total_cost" id="total_cost" value="{{ sale['total_cost'] }}" required>
+
+        <label for="refund">Refund:</label>
+        <input type="text" name="refund" id="refund" value="{{ sale['refund'] }}" required>
+
+        <input type="submit" value="Update Sale">
+    </form>
+</body>
+</html>

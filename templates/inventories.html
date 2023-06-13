@@ -1,10 +1,10 @@
+<!-- inventories.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Inventories</title>
 </head>
 <body>
-
     <table border="1" cellpadding="5">
         <tr>
             <th><a href="/clients">Clients</a></th>
@@ -14,50 +14,68 @@
             <th><a href="/sales_history">Sales History</a></th>
             <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
         </tr>
-      </table>
+    </table>
+
     <h1>Inventories</h1>
     
-    <!-- Display all inventories -->
     <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Inventory ID</th>
-                <th>Client ID</th>
-                <th>Food ID</th>
-                <th>Item Count</th>
-                <th>Units</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for inventory in inventories %}
-            <tr>
-                <td>{{ inventory[0] }}</td>
-                <td>{{ inventory[1] }}</td>
-                <td>{{ inventory[2] }}</td>
-                <td>{{ inventory[3] }}</td>
-                <td>{{ inventory[4] }}</td>
+        <tr>
+            <th>ID</th>
+            <th>Food ID</th>
+            <th>Region ID</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
+        {% for inventory in inventories %}
+        <tr>
+            <td>{{ inventory.inventory_id }}</td>
+            <td>{{ inventory.food_name }}</td>
+            <td>{{ inventory.region_id }}</td>
+            <td>{{ inventory.item_count }}</td>
+            <td>
+                <a href="{{ url_for('edit_inventory', inventory_id=inventory.inventory_id) }}">Edit</a>
+                <a href="{{ url_for('delete_inventory', inventory_id=inventory.inventory_id) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
+    <h2>Add New Inventory</h2>
+    <form method="POST" action="{{ url_for('add_inventory') }}">
+        <table>
+            <tr>
+                <td><label for="food_id">Food ID:</label></td>
                 <td>
-                  <a href="{{ url_for('edit_inventory', inventory_id = inventory[0]) }}">Edit</a>
-                	<a href="{{ url_for('delete_inventory', inventory_id = inventory[0]) }}">Delete</a>
+                    <select name="food_id">
+                        {% for food in foods %}
+                            <option value="{{ food.food_id }}">{{ food.food_name }}</option>
+                        {% endfor %}
+                    </select>
                 </td>
             </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    <!-- Form for adding a new item to the inventory -->
-    <h2>Add Inventory</h2>
-    <form action="/inventories/add" method="POST">
-        <label for="client_id">Client ID:</label>
-        <input type="text" name="client_id" id="client_id" required>
-        <label for="food_id">Food ID:</label>
-        <input type="text" name="food_id" id="food_id" required>
-        <label for="item_count">Item Count:</label>
-        <input type="text" name="item_count" id="item_count" required>
-        <label for="units">Units:</label>
-        <input type="text" name="units" id="units" required>
-        <button type="submit">Add</button>
+            <tr>
+                <td><label for="client_id">Client ID:</label></td>
+                <td>
+                    <select id="client_id" name="client_id" required>
+                        {% for client in clients %}
+                            <option value="{{ client.client_id }}">{{ client.client_id }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="region_id">Region ID:</label></td>
+                <td>
+                    <select id="region_id" name="region_id" required>
+                        {% for region in regions %}
+                            <option value="{{ region.region_id }}">{{ region.region_id }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Add Inventory">
     </form>
+    
 </body>
 </html>

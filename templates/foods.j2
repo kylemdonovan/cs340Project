@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title>List of Foods</title>
+
+</head>
+<body>
+<nav border="1" cellpadding="5">
+<table border="1" cellpadding="5">
+        <tr>
+            <th><a href="/clients">Clients</a></th>
+            <th><a href="/foods">Foods</a></th>
+            <th><a href="/inventories">Inventories</a></th>
+            <th><a href="/regions">Regions</a></th>
+            <th><a href="/sales_history">Sales History</a></th>
+            <th><a href="/sales_history_has_food">Sales History Has Food</a></th>
+        </tr>
+    </table>
+</nav>
+<h1>List of Foods</h1>
+  <table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Region ID</th>
+            <th>Food Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for food in foods %}
+            <tr>
+                <td>{{ food.region_id }}</td>
+                <td>{{ food.food_name }}</td>
+                <td>{{ food.price }}</td>
+                <td>
+                    <a href="/edit_food/{{ food.food_id }}" class="action-button">Edit</a>
+                     <a href="/foods/delete/{{ food.food_id }}" class="delete-button">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h2>Add Food</h2>
+<form method="POST" action="/add_food" style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+    <label for="region_id" style="margin-right: 10px;">Region ID:</label>
+    <select name="region_id" id="region_id" required>
+        {% for region in regions %}
+            <option value="{{ region.region_id }}">{{ region.region_id }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="food_name" style="margin-right: 10px; margin-left: 10px;">Food Name:</label>
+    <input type="text" name="food_name" id="food_name" required>
+
+    <label for="price" style="margin-right: 10px; margin-left: 10px;">Price:</label>
+    <input type="text" name="price" id="price" required>
+
+    <button type="submit" style="margin-left: 10px;">Add</button>
+</form>
+
+</body>
+</html>
+
+
+

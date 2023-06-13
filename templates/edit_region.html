@@ -1,17 +1,33 @@
-<!DOCTYPE html>
 <html>
 <head>
-<title>Edit Regions</title>
+    <title>Edit Region</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-  <h2>Edit Region</h2>
-  <form method="POST" action="{{ url_for('edit_region', region_id = region[0]) }}">
-	  <label for="region_name">Region Name:</label>
-	  <input type="text" id="region_name" name="region_name" required>
-	  <br>
-	 
-	  <input type="submit" value="Edit Region">
-  </form>
+<body>
+    <div>
+        <table border="1" cellpadding="5">
+            <caption>Editing Region:</caption>
+            <thead>
+                <tr>
+                    <th scope="col" data-field="regionID" data-filter-control="input">Region ID</th>
+                    <th scope="col" data-field="name" data-filter-control="input">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ region.region_id }}</td>
+                    <td>{{ region.name }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-</body>
-</html>
+        <div id="edit">
+            <form id="editRegion" action="/edit_region/{{ region.region_id }}" method="post">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ region.name }}">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
