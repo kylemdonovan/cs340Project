@@ -77,17 +77,16 @@ def add_client():
 
     return redirect(url_for('clients'))
 
-
 @app.route('/edit_client/<int:client_id>', methods=['GET', 'POST'])
 def edit_client(client_id):
     if request.method == 'POST':
+        # Handle form submission and update the client in the database
         if 'name' in request.form:
             name = request.form['name']
             region_id = request.form['region_id']
             address = request.form['address']
             phone = request.form['phone']
             email = request.form['email']
-            # Process the data and update the database using MySQL queries
             cur = mysql.connection.cursor()
             cur.execute("UPDATE Clients SET region_id = %s, name = %s, address = %s, phone = %s, email = %s WHERE client_id = %s",
                         (region_id, name, address, phone, email, client_id))
@@ -95,11 +94,12 @@ def edit_client(client_id):
             cur.close()
             return redirect(url_for('clients'))
     else:
+        # Retrieve the client from the database and render the edit template
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Clients WHERE client_id = %s", (client_id,))
         client = cur.fetchone()
         cur.close()
-        return render_template('edit_client.html', client=client)
+        return render_template('edit_client.html', client=client, client_id=client_id)
 
 
 @app.route('/clients/delete/<int:client_id>', methods=['GET', 'POST'])
@@ -198,8 +198,8 @@ def inventories():
             return redirect(url_for('inventories'))
     else:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT Clients.name, Foods.food_name, Inventories.item_count FROM Inventories JOIN Foods ON Inventories.food_id = Foods.food_id JOIN Clients ON Inventories.client_id = Clients.client_id")
-        inventory_data = cur.fetchall()
+        cur.execute("SELECT * FROM Inventories")
+        inventories = cur.fetchall()
 
         cur.execute("SELECT * FROM Foods")
         foods = cur.fetchall()
@@ -208,7 +208,7 @@ def inventories():
         clients = cur.fetchall()
 
         cur.close()
-        return render_template('inventories.j2', inventory_data=inventory_data, foods=foods, clients=clients)
+        return render_template('inventories.j2', inventories=inventories, foods=foods, clients=clients)
 
 
 @app.route('/add_inventory', methods=['POST'])
@@ -223,22 +223,23 @@ def add_inventory():
     cur.close()
 
     return redirect(url_for('inventories'))
+
 @app.route('/inventories/edit/<int:inventory_id>', methods=['GET', 'POST'])
 def edit_inventory(inventory_id):
     if request.method == 'POST':
         if 'food_id' in request.form:
             food_id = request.form['food_id']
-            item_count = request.form['item_count']
+            quantity = request.form['quantity']
             # Process the data and update the database using MySQL queries
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE Inventories SET food_id = %s, item_count = %s WHERE inventory_id = %s",
-                        (food_id, item_count, inventory_id))
+            cur.execute("UPDATE Inventories SET food_id = %s, quantity = %s WHERE inventory_id = %s",
+                        (food_id, quantity, inventory_id))
             mysql.connection.commit()
             cur.close()
             return redirect(url_for('inventories'))
     else:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Inventories WHERE inventory_id = %s", (inventory_id,))
+        cur.execute("SELECT * FROM Inventories WHERE inventory_id = %s", (inventory_id))
         inventory = cur.fetchone()
         cur.close()
         return render_template('edit_inventory.html', inventory=inventory)
@@ -250,6 +251,7 @@ def delete_inventory(inventory_id):
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('inventories'))
+
 
 
 # Regions
@@ -455,6 +457,6 @@ def delete_sales_history_has_food(sales_history_id, food_id):
 # Listener
 
 if __name__ == "__main__":
-    port_number = 45655
+    port_number = 45654
     app.run(debug=True, port=port_number)
     
